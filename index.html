@@ -2,1051 +2,1588 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SOVRN</title>
-  <meta name="description" content="SOVRN — Remember who you are. Enter your birth data and receive your Sovereign Blueprint." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>SOVRN — The Blueprint</title>
+  <meta name="description" content="SOVRN is not a horoscope. It is a diagnostic. Enter your birth data and receive your Blueprint — your soul architecture, your shadow pattern, and your true north, calculated from the sky the moment you arrived." />
+  <meta name="theme-color" content="#FBFAF7" />
 
-  <!-- Fonts: Space Grotesk + Cormorant Garamond -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <style>
-    /* ------------------------------------------------------------------ *
-     *  RESET / FOUNDATION
-     * ------------------------------------------------------------------ */
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    /* ================================================================== *
+     *  SOVRN — FREE BLUEPRINT EXPERIENCE (Screens 1–5)
+     *  A premium diagnostic. White = clarity & truth. Red = initiation.
+     *  Type: Fraunces (the oracle / editorial voice) + Space Grotesk
+     *  (the instrument panel / clinical precision).
+     * ================================================================== */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --void: #000000;
-      --bone: #F5F0E8;
-      --gold: #D4AF37;
-      --crimson: #8B2500;
+      --paper:    #FBFAF7;   /* warm white — clarity, not sterility          */
+      --paper-2:  #F4F0E8;   /* card / alcove tint                           */
+      --paper-3:  #EFEAE0;   /* deeper panel                                 */
+      --ink:      #17140F;   /* near-black warm — authority                  */
+      --ink-2:    #57514764; /* (unused placeholder)                        */
+      --muted:    #6E675B;   /* secondary text                               */
+      --faint:    #9A9284;   /* tertiary / captions                          */
+      --line:     #E4DDCF;   /* hairline                                     */
+      --line-2:   #D8D0BF;   /* stronger hairline                            */
+      --red:      #C21F2C;   /* initiation red — urgency, the beginning      */
+      --red-deep: #9E1622;
+      --red-tint: rgba(194, 31, 44, 0.06);
+      --red-line: rgba(194, 31, 44, 0.22);
 
-      --glow-text: 0 0 20px rgba(212, 175, 55, 0.3);
-      --glow-interactive: 0 0 30px rgba(212, 175, 55, 0.15);
+      --mono: 'Space Grotesk', 'SFMono-Regular', ui-monospace, monospace;
+      --grotesk: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
 
-      --space: 'Space Grotesk', sans-serif;
-      --cormorant: 'Cormorant Garamond', serif;
+      --maxw: 640px;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    html {
-      -webkit-text-size-adjust: 100%;
-    }
+    html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 
     body {
-      background: var(--void);
-      color: var(--bone);
-      font-family: var(--cormorant);
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--serif);
       min-height: 100vh;
       overflow-x: hidden;
-      position: relative;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      position: relative;
     }
 
-    /* ------------------------------------------------------------------ *
-     *  THE STARFIELD — a slowly drifting canvas behind everything
-     * ------------------------------------------------------------------ */
-    #starfield {
+    /* A faint ephemeris grid — the instrument beneath the paper */
+    #instrument {
       position: fixed;
       inset: 0;
-      width: 100%;
-      height: 100%;
       z-index: 0;
       pointer-events: none;
-      display: block;
+      opacity: 0.5;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(194,31,44,0.028) 0%, rgba(194,31,44,0) 46%),
+        repeating-linear-gradient(0deg, rgba(23,20,15,0.018) 0px, rgba(23,20,15,0.018) 1px, transparent 1px, transparent 64px),
+        repeating-linear-gradient(90deg, rgba(23,20,15,0.018) 0px, rgba(23,20,15,0.018) 1px, transparent 1px, transparent 64px);
     }
 
     /* ------------------------------------------------------------------ *
-     *  THE VIGNETTE — darkens edges/corners, pulls the eye to center
+     *  APP SHELL — one column, screens swapped in place
      * ------------------------------------------------------------------ */
-    #vignette {
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-      background: radial-gradient(
-        ellipse at center,
-        rgba(0, 0, 0, 0) 45%,
-        rgba(0, 0, 0, 0.45) 80%,
-        rgba(0, 0, 0, 0.8) 100%
-      );
-    }
-
-    /* Lift all real content above the starfield + vignette */
-    #main-content,
-    #threshold-crossed {
+    .shell {
       position: relative;
       z-index: 2;
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 0 28px;
+      min-height: 100vh;
+    }
+
+    .screen { display: none; }
+    .screen.active { display: block; animation: screenIn 900ms var(--ease) both; }
+    @keyframes screenIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     /* ------------------------------------------------------------------ *
-     *  THE BLACK CURTAIN — page loads to pure void for 1.5s
+     *  MASTHEAD — the fixed instrument label
      * ------------------------------------------------------------------ */
-    #curtain {
+    .masthead {
       position: fixed;
-      inset: 0;
-      background: var(--void);
-      z-index: 9999;
-      opacity: 1;
-      transition: opacity 1200ms ease-in-out;
-      pointer-events: none;
+      top: 0; left: 0; right: 0;
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 28px;
+      max-width: calc(var(--maxw) + 56px);
+      margin: 0 auto;
+      mix-blend-mode: normal;
     }
-    #curtain.lifted {
-      opacity: 0;
-    }
-
-    /* ------------------------------------------------------------------ *
-     *  WORDMARK
-     * ------------------------------------------------------------------ */
     .wordmark {
-      position: absolute;
-      top: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-family: var(--space);
+      font-family: var(--grotesk);
       font-weight: 700;
-      font-size: 14px;
-      letter-spacing: 0.3em;
-      color: var(--gold);
-      text-shadow: var(--glow-text);
-      opacity: 0;
-      transition: opacity 1000ms ease-in-out;
-      z-index: 10;
+      font-size: 15px;
+      letter-spacing: 0.42em;
+      color: var(--ink);
+      padding-left: 0.42em; /* optical: balance the tracking */
+      cursor: pointer;
+      background: none; border: none;
+    }
+    .masthead-tag {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--faint);
     }
 
     /* ------------------------------------------------------------------ *
-     *  STAGGERED ARRIVAL ELEMENTS (controlled by JS)
+     *  PROGRESS RAIL — the diagnostic stepper (screens 2–4)
      * ------------------------------------------------------------------ */
-    .arrive {
+    .rail {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      padding: 96px 0 8px;
       opacity: 0;
-      transition: opacity 1000ms ease-in-out;
+      transition: opacity 600ms var(--ease);
     }
-    .arrive.visible {
-      opacity: 1;
+    .rail.show { opacity: 1; }
+    .rail-step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--faint);
+      white-space: nowrap;
     }
+    .rail-step .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px; height: 20px;
+      border: 1px solid var(--line-2);
+      border-radius: 50%;
+      font-size: 9px;
+      color: var(--faint);
+    }
+    .rail-step.done .num { border-color: var(--red-line); color: var(--red); }
+    .rail-step.current { color: var(--ink); }
+    .rail-step.current .num {
+      border-color: var(--red);
+      background: var(--red);
+      color: var(--paper);
+    }
+    .rail-line {
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+      margin: 0 12px;
+      min-width: 10px;
+    }
+    .rail-step .label { display: inline; }
 
-    /* Sections that fade in on scroll via IntersectionObserver */
-    .reveal {
-      opacity: 0;
-      transition: opacity 1000ms ease-in-out;
-    }
-    .reveal.visible {
-      opacity: 1;
-    }
-
-    /* ------------------------------------------------------------------ *
-     *  LAYOUT
-     * ------------------------------------------------------------------ */
-    main {
-      transition: opacity 600ms ease-in-out;
-    }
-    main.dissolved {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    /* SECTION 1 — THE ARRIVAL */
+    /* ================================================================== *
+     *  SCREEN 1 — THE ARRIVAL
+     * ================================================================== */
     .arrival {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      text-align: center;
-      padding: 0 24px;
-      position: relative;
+      padding: 120px 0 60px;
     }
-
-    .headline {
-      font-family: var(--space);
-      font-weight: 700;
-      font-size: 64px;
-      letter-spacing: 0.08em;
-      color: var(--bone);
-      max-width: 700px;
-      line-height: 1.15;
-      text-shadow: 0 0 60px rgba(212, 175, 55, 0.08);
-    }
-
-    .subheadline {
-      font-family: var(--cormorant);
-      font-weight: 400;
-      font-size: 20px;
-      line-height: 1.8;
-      color: rgba(245, 240, 232, 0.7);
-      max-width: 560px;
-      margin-top: 32px;
-    }
-
-    /* The golden thread — scroll indicator */
-    .scroll-indicator {
-      width: 1px;
-      height: 40px;
-      background: var(--gold);
-      box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
-      margin-top: 60px;
-      animation: pulse 2.5s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 0.3; }
-      50%      { opacity: 0.8; }
-    }
-
-    /* SECTION 2 — THE THRESHOLD */
-    .threshold {
-      padding-top: 72px; /* reduced 40% from 120px — the descent feels purposeful */
-      padding-left: 24px;
-      padding-right: 24px;
-      position: relative;
-    }
-
-    /* A faint warm glow pooling behind the form — a lit alcove in the dark */
-    .threshold::before {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 900px;
-      height: 900px;
-      max-width: 140vw;
-      pointer-events: none;
-      z-index: -1;
-      background: radial-gradient(
-        ellipse at center,
-        rgba(212, 175, 55, 0.03) 0%,
-        rgba(212, 175, 55, 0) 60%
-      );
-    }
-
-    /* Thin gold hairline dividers framing the form */
-    .divider {
-      width: 100%;
-      max-width: 520px;
-      height: 1px;
-      margin: 0 auto;
-      background: rgba(212, 175, 55, 0.1);
-      border: none;
-    }
-    .divider--top    { margin-bottom: 60px; }
-    .divider--bottom { margin-top: 48px; }
-
-    .threshold-intro {
-      font-family: var(--space);
-      font-weight: 500;
-      font-size: 13px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gold);
-      text-shadow: var(--glow-text);
-      text-align: center;
-      margin-bottom: 60px;
-    }
-
-    form {
-      max-width: 520px;
-      margin: 0 auto;
-    }
-
-    .field {
-      margin-bottom: 48px;
-    }
-    .field:last-of-type {
-      margin-bottom: 0;
-    }
-
-    label {
-      display: block;
-      font-family: var(--cormorant);
-      font-style: italic;
-      font-weight: 400;
-      font-size: 18px;
-      color: var(--gold);
-      text-shadow: var(--glow-text);
-      margin-bottom: 12px;
-      line-height: 1.4;
-    }
-
-    input,
-    textarea {
-      width: 100%;
-      background: transparent;
-      border: none;
-      border-bottom: 1px solid rgba(245, 240, 232, 0.2);
-      border-radius: 0;
-      font-family: var(--cormorant);
-      font-weight: 400;
-      font-size: 18px;
-      color: var(--bone);
-      padding: 12px 0;
-      line-height: 1.6;
-      transition: border-color 400ms ease-in-out, box-shadow 400ms ease-in-out;
-      -webkit-appearance: none;
-      appearance: none;
-    }
-
-    textarea {
-      height: 120px;
-      resize: vertical;
-      font-family: var(--cormorant);
-    }
-
-    input:focus,
-    textarea:focus {
-      outline: none;
-      border-bottom-color: var(--gold);
-      box-shadow: 0 0 10px rgba(212, 175, 55, 0.15);
-    }
-
-    input::placeholder,
-    textarea::placeholder {
-      color: rgba(245, 240, 232, 0.25);
-      font-family: var(--cormorant);
-      font-style: normal;
-    }
-
-    /* Tame native date/time pickers in the void */
-    input[type="date"],
-    input[type="time"] {
-      color-scheme: dark;
-    }
-    input[type="date"]::-webkit-calendar-picker-indicator,
-    input[type="time"]::-webkit-calendar-picker-indicator {
-      filter: invert(0.7) sepia(1) saturate(2) hue-rotate(5deg);
-      cursor: pointer;
-      opacity: 0.5;
-    }
-
-    .helper {
-      font-family: var(--cormorant);
-      font-weight: 400;
-      font-size: 13px;
-      line-height: 1.6;
-      color: rgba(245, 240, 232, 0.4);
-      margin-top: 6px;
-    }
-
-    /* CTA Button */
-    .cta {
-      display: block;
-      width: 100%;
-      margin-top: 48px;
-      font-family: var(--space);
-      font-weight: 700;
-      font-size: 15px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--void);
-      background: var(--gold);
-      border: none;
-      border-radius: 0;
-      padding: 24px 56px;
-      cursor: pointer;
-      text-align: center;
-      text-decoration: none;
-      box-shadow: 0 0 40px rgba(212, 175, 55, 0.2);
-      animation: breathe 3s ease-in-out infinite;
-      transition: background 400ms ease-in-out, box-shadow 400ms ease-in-out;
-    }
-
-    @keyframes breathe {
-      0%, 100% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.17); }
-      50%      { box-shadow: 0 0 40px rgba(212, 175, 55, 0.23); }
-    }
-
-    .cta:hover {
-      background: var(--bone);
-      box-shadow: 0 0 40px rgba(212, 175, 55, 0.25);
-      animation: none;
-    }
-    .cta:disabled {
-      cursor: wait;
-      opacity: 0.6;
-    }
-
-    .reassurance {
-      font-family: var(--cormorant);
-      font-weight: 400;
-      font-size: 13px;
-      line-height: 1.6;
-      color: rgba(245, 240, 232, 0.4);
-      text-align: center;
-      margin-top: 24px;
-      max-width: 520px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    /* SECTION 3 — FOOTER */
-    footer {
-      margin-top: 160px;
-      text-align: center;
-      padding-bottom: 40px;
-    }
-    footer p {
-      font-family: var(--space);
-      font-weight: 400;
+    .eyebrow {
+      font-family: var(--mono);
       font-size: 11px;
-      letter-spacing: 0.25em;
-      color: rgba(245, 240, 232, 0.25);
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 30px;
     }
+    .eyebrow::before {
+      content: "";
+      width: 26px; height: 1px;
+      background: var(--red);
+    }
+    h1.arrival-h {
+      font-family: var(--serif);
+      font-optical-sizing: auto;
+      font-weight: 400;
+      font-size: clamp(40px, 8.5vw, 74px);
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      max-width: 12ch;
+    }
+    h1.arrival-h em {
+      font-style: italic;
+      color: var(--red);
+    }
+    .arrival-sub {
+      font-family: var(--serif);
+      font-weight: 300;
+      font-size: clamp(18px, 3.4vw, 21px);
+      line-height: 1.62;
+      color: var(--muted);
+      max-width: 44ch;
+      margin-top: 30px;
+    }
+    .arrival-not {
+      margin-top: 40px;
+      padding: 20px 24px;
+      border-left: 2px solid var(--red);
+      background: var(--red-tint);
+      font-family: var(--grotesk);
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--ink);
+      max-width: 46ch;
+    }
+    .arrival-not b { font-weight: 600; }
+    .arrival-not span { color: var(--muted); }
 
     /* ------------------------------------------------------------------ *
-     *  POST-SUBMISSION VIEW
+     *  BUTTONS
      * ------------------------------------------------------------------ */
-    #threshold-crossed {
-      display: none;
+    .btn {
+      -webkit-appearance: none; appearance: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      font-family: var(--grotesk);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--paper);
+      background: var(--ink);
+      border: 1px solid var(--ink);
+      border-radius: 0;
+      padding: 20px 34px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 320ms var(--ease), color 320ms var(--ease), transform 320ms var(--ease), box-shadow 320ms var(--ease);
+    }
+    .btn .arrow { transition: transform 320ms var(--ease); }
+    .btn:hover { background: var(--red); border-color: var(--red); box-shadow: 0 14px 40px -18px rgba(194,31,44,0.5); }
+    .btn:hover .arrow { transform: translateX(5px); }
+    .btn:disabled { opacity: 0.5; cursor: wait; }
+    .btn--full { display: flex; width: 100%; }
+    .btn--ghost {
+      background: transparent;
+      color: var(--ink);
+      border-color: var(--line-2);
+    }
+    .btn--ghost:hover { background: transparent; color: var(--red); border-color: var(--red); box-shadow: none; }
+
+    .arrival-cta { margin-top: 52px; }
+    .arrival-meta {
+      margin-top: 22px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: var(--faint);
+      line-height: 1.6;
+    }
+
+    /* ================================================================== *
+     *  SCREENS 2 & 3 — INTAKE
+     * ================================================================== */
+    .intake { padding-bottom: 80px; }
+    .intake-head { margin: 40px 0 44px; }
+    .intake-kicker {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 16px;
+    }
+    .intake-title {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(28px, 5.4vw, 38px);
+      line-height: 1.1;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      max-width: 20ch;
+    }
+    .intake-lede {
+      font-family: var(--serif);
+      font-weight: 300;
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--muted);
+      margin-top: 18px;
+      max-width: 48ch;
+    }
+
+    .field { margin-bottom: 34px; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .field-label {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+    .field-label .idx { color: var(--red); }
+    .field-label .opt {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: var(--faint);
+      text-transform: uppercase;
+    }
+    .field-q {
+      display: block;
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 1.35;
+      color: var(--ink);
+      margin-bottom: 14px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      background: var(--paper);
+      color: var(--ink);
+      border: 1px solid var(--line-2);
+      border-radius: 2px;
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: 18px;
+      padding: 15px 16px;
+      line-height: 1.5;
+      transition: border-color 260ms var(--ease), box-shadow 260ms var(--ease);
+      -webkit-appearance: none; appearance: none;
+    }
+    textarea { min-height: 118px; resize: vertical; }
+    input::placeholder, textarea::placeholder { color: var(--faint); font-style: italic; }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px var(--red-tint);
+    }
+    input[type="date"], input[type="time"] { color-scheme: light; font-family: var(--grotesk); font-size: 17px; letter-spacing: 0.02em; }
+    .helper {
+      font-family: var(--serif);
+      font-weight: 300;
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+
+    .intake-foot { margin-top: 42px; display: flex; flex-direction: column; gap: 16px; }
+    .intake-reassure {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: var(--faint);
+      line-height: 1.6;
+      text-align: center;
+    }
+    .back-link {
+      align-self: flex-start;
+      background: none; border: none;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--faint);
+      cursor: pointer;
+      padding: 4px 0;
+      margin-bottom: 4px;
+    }
+    .back-link:hover { color: var(--red); }
+
+    /* ================================================================== *
+     *  THE SCAN — the calculation moment between report and blueprint
+     * ================================================================== */
+    #scan {
       position: fixed;
       inset: 0;
+      z-index: 60;
+      background: var(--paper);
+      display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      padding: 40px;
       text-align: center;
-      padding: 40px 24px;
-      overflow-y: auto;
     }
-    #threshold-crossed.active {
+    #scan.active { display: flex; }
+    .scan-ring {
+      width: 120px; height: 120px;
+      position: relative;
+      margin-bottom: 44px;
+    }
+    .scan-ring::before, .scan-ring::after {
+      content: "";
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      border: 1px solid var(--line-2);
+    }
+    .scan-ring::after {
+      inset: 22px;
+      border-color: var(--red-line);
+      border-top-color: var(--red);
+      animation: spin 1.4s linear infinite;
+    }
+    .scan-ring .dot {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 7px; height: 7px;
+      background: var(--red);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 0 6px var(--red-tint);
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .scan-lines {
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      min-height: 24px;
+      line-height: 1.6;
+    }
+    .scan-lines .done-mark { color: var(--red); margin-right: 8px; }
+    .scan-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--faint);
+      margin-top: 30px;
+    }
+
+    /* ================================================================== *
+     *  SCREEN 4 — THE BLUEPRINT (the centerpiece)
+     * ================================================================== */
+    .blueprint { padding: 40px 0 30px; }
+
+    .report-head {
+      border-top: 2px solid var(--ink);
+      border-bottom: 1px solid var(--line-2);
+      padding: 18px 0;
       display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
     }
-    /* When the archetype reveal is present, anchor to top so the taller
-       column never clips on shorter viewports; it still reads as centered. */
-    #threshold-crossed.has-archetype {
-      justify-content: flex-start;
-      padding-top: 12vh;
-      padding-bottom: 80px;
-    }
-
-    /* ------------------------------------------------------------------ *
-     *  THE ARCHETYPE REVEAL — a card turned over in the void
-     * ------------------------------------------------------------------ */
-    .archetype {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 40px; /* 40px of void before "You've crossed the threshold." */
-    }
-
-    /* Thin gold line that draws itself from center outward */
-    .arch-line {
-      width: 0;
-      height: 1px;
-      background: var(--gold);
-      box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
-      transition: width 800ms ease-in-out;
-    }
-    .arch-line.drawn {
-      width: 200px;
-    }
-
-    .arch-name {
-      font-family: var(--space);
+    .report-head .r-title {
+      font-family: var(--grotesk);
       font-weight: 700;
-      font-size: 36px;
+      font-size: 13px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .report-head .r-id {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: var(--faint);
+    }
+
+    .subject {
+      padding: 34px 0 12px;
+    }
+    .subject-for {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--faint);
+      margin-bottom: 14px;
+    }
+    .subject-name {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(34px, 7vw, 52px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+    .subject-name em { font-style: italic; color: var(--red); }
+
+    /* Chart coordinates — the instrument readout */
+    .coords {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      margin: 30px 0 10px;
+      border: 1px solid var(--line-2);
+    }
+    .coord {
+      flex: 1 1 33%;
+      min-width: 120px;
+      padding: 18px 20px;
+      border-right: 1px solid var(--line-2);
+    }
+    .coord:last-child { border-right: none; }
+    .coord .c-key {
+      font-family: var(--mono);
+      font-size: 10px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--gold);
-      text-shadow: var(--glow-text);
-      line-height: 1.2;
-      margin-top: 32px;
-      opacity: 0;
-      transition: opacity 800ms ease-in-out;
+      color: var(--faint);
+      margin-bottom: 8px;
+    }
+    .coord .c-val {
+      font-family: var(--serif);
+      font-size: 24px;
+      line-height: 1.1;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+    .coord .glyph {
+      font-family: var(--grotesk);
+      color: var(--red);
+      font-size: 22px;
+      line-height: 1;
+    }
+    .coord .c-sub {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-top: 7px;
     }
 
-    .arch-sign {
-      font-family: var(--cormorant);
-      font-style: italic;
-      font-weight: 400;
-      font-size: 15px;
-      color: rgba(245, 240, 232, 0.5);
-      margin-top: 14px;
-      opacity: 0;
-      transition: opacity 600ms ease-in-out;
+    .born-line {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-top: 4px;
     }
 
-    .arch-desc {
-      font-family: var(--cormorant);
-      font-weight: 400;
-      font-size: 18px;
-      line-height: 1.8;
-      color: var(--bone);
-      max-width: 480px;
-      margin-top: 28px;
-      margin-bottom: 40px;
-      opacity: 0;
-      transition: opacity 800ms ease-in-out;
+    /* A diagnostic section */
+    .diag {
+      padding: 44px 0;
+      border-bottom: 1px solid var(--line);
     }
-
-    .arch-name.visible,
-    .arch-sign.visible,
-    .arch-desc.visible {
-      opacity: 1;
+    .diag-head {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 22px;
     }
-
-    .crossed-headline {
-      font-family: var(--space);
+    .diag-no {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--red);
+      padding-top: 6px;
+    }
+    .diag-title {
+      font-family: var(--grotesk);
       font-weight: 700;
-      font-size: 42px;
-      color: var(--bone);
-      line-height: 1.2;
-      opacity: 0;
-      transition: opacity 800ms ease-in-out;
+      font-size: 13px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink);
     }
-
-    .crossed-body {
-      font-family: var(--cormorant);
+    .diag-source {
+      display: block;
+      font-family: var(--mono);
+      font-size: 10px;
       font-weight: 400;
-      font-size: 18px;
-      line-height: 1.8;
-      color: rgba(245, 240, 232, 0.7);
-      max-width: 480px;
-      margin-top: 28px;
-      opacity: 0;
-      transition: opacity 800ms ease-in-out;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--faint);
+      margin-top: 7px;
     }
-
-    /* The cohort offer */
-    .cohort {
-      margin-top: 64px;
-      max-width: 440px;
-      opacity: 0;
-      transition: opacity 800ms ease-in-out;
-    }
-
-    .cohort-intro {
-      font-family: var(--cormorant);
-      font-style: italic;
-      font-weight: 400;
-      font-size: 16px;
-      color: var(--gold);
-      text-shadow: var(--glow-text);
-      margin-bottom: 20px;
-    }
-
-    .cohort-body {
-      font-family: var(--cormorant);
-      font-weight: 400;
-      font-size: 17px;
-      line-height: 1.8;
-      color: var(--bone);
-    }
-
-    .cohort-price {
-      font-family: var(--space);
-      font-weight: 700;
+    .diag-body {
+      font-family: var(--serif);
+      font-weight: 300;
       font-size: 20px;
-      color: var(--gold);
-      text-shadow: var(--glow-text);
-      margin: 24px 0;
+      line-height: 1.62;
+      color: var(--ink);
+      max-width: 54ch;
+    }
+    .diag-body .lead-in {
+      font-weight: 500;
+      font-style: italic;
+      color: var(--red);
     }
 
-    .cohort-decline {
-      display: inline-block;
-      margin-top: 24px;
-      font-family: var(--cormorant);
+    /* The echo of the subject's own words */
+    .echo {
+      margin-top: 26px;
+      padding: 20px 22px;
+      background: var(--paper-2);
+      border-left: 2px solid var(--red);
+    }
+    .echo-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--faint);
+      margin-bottom: 10px;
+    }
+    .echo-quote {
+      font-family: var(--serif);
+      font-style: italic;
       font-weight: 400;
-      font-size: 14px;
-      color: rgba(245, 240, 232, 0.4);
+      font-size: 18px;
+      line-height: 1.5;
+      color: var(--ink);
+    }
+    .echo-read {
+      font-family: var(--serif);
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--muted);
+      margin-top: 12px;
+    }
+
+    /* Withheld — the ascendant, saved for the paid tier */
+    .withheld {
+      margin: 30px 0 4px;
+      padding: 22px 24px;
+      border: 1px dashed var(--line-2);
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .withheld .w-icon {
+      font-family: var(--grotesk);
+      font-weight: 700;
+      color: var(--faint);
+      font-size: 20px;
+    }
+    .withheld .w-key {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--faint);
+      margin-bottom: 6px;
+    }
+    .withheld .w-text {
+      font-family: var(--serif);
+      font-weight: 300;
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+
+    /* The bridge inside the blueprint */
+    .bp-bridge {
+      padding: 48px 0 20px;
+      text-align: center;
+    }
+    .bp-bridge .b-eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 18px;
+    }
+    .bp-bridge .b-line {
+      font-family: var(--serif);
+      font-weight: 300;
+      font-size: 23px;
+      line-height: 1.5;
+      color: var(--ink);
+      max-width: 40ch;
+      margin: 0 auto 34px;
+    }
+    .bp-bridge .b-line em { font-style: italic; color: var(--red); }
+
+    /* ================================================================== *
+     *  SCREEN 5 — THE BRIDGE / TRANSFORMATION
+     * ================================================================== */
+    .bridge { padding: 70px 0 60px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+    .bridge-kicker {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 24px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .bridge-kicker::before { content: ""; width: 26px; height: 1px; background: var(--red); }
+    .bridge-h {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(32px, 6.4vw, 50px);
+      line-height: 1.06;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      max-width: 16ch;
+    }
+    .bridge-h em { font-style: italic; color: var(--red); }
+    .bridge-sub {
+      font-family: var(--serif);
+      font-weight: 300;
+      font-size: 19px;
+      line-height: 1.6;
+      color: var(--muted);
+      max-width: 50ch;
+      margin-top: 24px;
+    }
+    .phases {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--line-2);
+      border: 1px solid var(--line-2);
+      margin: 44px 0;
+    }
+    .phase {
+      background: var(--paper);
+      padding: 26px 22px;
+    }
+    .phase .p-no {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--red);
+      margin-bottom: 14px;
+    }
+    .phase .p-name {
+      font-family: var(--grotesk);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+    .phase .p-desc {
+      font-family: var(--serif);
+      font-weight: 300;
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+    .cohort-card {
+      border: 1px solid var(--ink);
+      padding: 34px 30px;
+    }
+    .cohort-tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 16px;
+    }
+    .cohort-body {
+      font-family: var(--serif);
+      font-weight: 300;
+      font-size: 19px;
+      line-height: 1.6;
+      color: var(--ink);
+    }
+    .cohort-meta {
+      display: flex;
+      gap: 30px;
+      margin: 24px 0;
+      flex-wrap: wrap;
+    }
+    .cohort-meta .cm { }
+    .cohort-meta .cm-k {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--faint);
+      margin-bottom: 6px;
+    }
+    .cohort-meta .cm-v {
+      font-family: var(--serif);
+      font-size: 22px;
+      color: var(--ink);
+    }
+    .cohort-meta .cm-v.red { color: var(--red); }
+    .bridge-decline {
+      display: block;
+      margin: 22px auto 0;
+      background: none; border: none;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--faint);
       cursor: pointer;
-      text-decoration: none;
-      background: none;
-      border: none;
+      text-align: center;
     }
-    .cohort-decline:hover {
-      text-decoration: underline;
+    .bridge-decline:hover { color: var(--red); }
+
+    footer {
+      margin-top: 90px;
+      padding: 30px 0 10px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
     }
+    footer .f-mark { font-family: var(--grotesk); font-weight: 700; font-size: 12px; letter-spacing: 0.3em; color: var(--ink); }
+    footer .f-note { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--faint); }
 
     /* ------------------------------------------------------------------ *
-     *  MOBILE — below 768px, ~30% smaller, tighter rhythm
+     *  MOBILE
      * ------------------------------------------------------------------ */
-    @media (max-width: 767px) {
-      .headline      { font-size: 36px; }
-      .subheadline   { font-size: 17px; }
-
-      .threshold     { padding-top: 48px; }
-      .threshold-intro { font-size: 12px; margin-bottom: 48px; }
-
-      form           { max-width: 100%; padding: 0; }
-      .field         { margin-bottom: 40px; }
-
-      label          { font-size: 17px; }
-      input, textarea { font-size: 16px; }   /* 16px keeps iOS from zooming on focus */
-      .helper        { font-size: 12px; }
-
-      footer         { margin-top: 120px; }
-
-      .crossed-headline { font-size: 28px; }
-      .crossed-body     { font-size: 16px; }
-      .cohort-body      { font-size: 16px; }
-
-      .arch-name        { font-size: 26px; }
-      .arch-desc        { font-size: 16px; }
-      .arch-line.drawn  { width: 140px; }
+    @media (max-width: 620px) {
+      .shell { padding: 0 22px; }
+      .masthead { padding: 18px 22px; }
+      .field-row { grid-template-columns: 1fr; gap: 0; }
+      .field-row .field { margin-bottom: 30px; }
+      .coord { flex: 1 1 100%; border-right: none; border-bottom: 1px solid var(--line-2); }
+      .coord:last-child { border-bottom: none; }
+      .phases { grid-template-columns: 1fr; }
+      .rail-step .label { display: none; }
+      .rail-step .num { width: 22px; height: 22px; }
+      .diag-body { font-size: 18px; }
+      .masthead-tag { display: none; }
     }
 
-    /* Honor reduced-motion preferences without breaking visibility */
     @media (prefers-reduced-motion: reduce) {
-      .scroll-indicator,
-      .cta {
-        animation: none;
-      }
+      .screen.active { animation: none; }
+      .scan-ring::after { animation: none; }
+      html { scroll-behavior: auto; }
     }
   </style>
 </head>
 
 <body>
-  <!-- Slowly drifting starfield — the inhabited void -->
-  <canvas id="starfield" aria-hidden="true"></canvas>
-  <!-- Vignette darkening the edges, drawing the eye to center -->
-  <div id="vignette" aria-hidden="true"></div>
+  <div id="instrument" aria-hidden="true"></div>
 
-  <!-- The void that lifts after 1.5s -->
-  <div id="curtain"></div>
+  <header class="masthead">
+    <button class="wordmark" id="home-mark" aria-label="SOVRN — return to start">SOVRN</button>
+    <span class="masthead-tag">Sovereign Diagnostic</span>
+  </header>
 
-  <main id="main-content">
-    <!-- The wordmark floating in the void -->
-    <div class="wordmark" id="wordmark">SOVRN</div>
+  <div class="shell">
 
-    <!-- SECTION 1 — THE ARRIVAL -->
-    <section class="arrival">
-      <h1 class="headline arrive" id="headline">Remember who you are.</h1>
-      <p class="subheadline arrive" id="subheadline">
-        Enter your birth data. Receive your Sovereign Blueprint — a personalized
-        decode of your soul architecture, shadow pattern, and true north written
-        into your natal chart before you were born.
-      </p>
-      <div class="scroll-indicator arrive" id="scroll-indicator" aria-hidden="true"></div>
-    </section>
-
-    <!-- SECTION 2 — THE THRESHOLD -->
-    <section class="threshold reveal">
-      <hr class="divider divider--top" aria-hidden="true" />
-      <p class="threshold-intro">Seven questions. One blueprint. No two are the same.</p>
-
-      <!--
-        FORM SUBMISSION:
-        Submissions are sent to Formspree via fetch (AJAX) so the page can
-        transform in place instead of redirecting.
-        Endpoint: https://formspree.io/f/xdarebvj  (swap if the account changes)
-      -->
-      <form id="blueprint-form" action="https://formspree.io/f/xdarebvj" method="POST">
-
-        <!-- Field 1 -->
-        <div class="field">
-          <label for="f-birthdate">When did you arrive?</label>
-          <input type="text" id="f-birthdate" name="When did you arrive" placeholder="Month / Day / Year" required />
-        </div>
-
-        <!-- Field 2 -->
-        <div class="field">
-          <label for="f-birthtime">What hour did you enter the world?</label>
-          <input type="text" id="f-birthtime" name="What hour did you enter the world" placeholder="Hour : Minute AM/PM" required />
-          <p class="helper">As exact as you know. Check your birth certificate if unsure.</p>
-        </div>
-
-        <!-- Field 3 -->
-        <div class="field">
-          <label for="f-birthplace">Where were you born?</label>
-          <input type="text" id="f-birthplace" name="Where were you born" placeholder="City, State, Country" required />
-        </div>
-
-        <!-- Field 4 -->
-        <div class="field">
-          <label for="f-fear">Name the fear that runs your life — the one you've never said out loud.</label>
-          <textarea id="f-fear" name="The fear that runs your life" required></textarea>
-          <p class="helper">
-            Be specific. Not 'failure' — but what failure would look like. Not
-            'rejection' — but whose rejection would break you and why. The more
-            honest you are here, the more precisely your blueprint can name what's
-            actually holding you back. Write 2-3 sentences.
-          </p>
-        </div>
-
-        <!-- Field 5 -->
-        <div class="field">
-          <label for="f-day">Describe a single day in the life you know you're meant to live.</label>
-          <textarea id="f-day" name="A single day in the life you are meant to live" required></textarea>
-          <p class="helper">
-            Not the vision board. The Tuesday. What do you wake up to? What work
-            are you doing? Who is around you? What does the afternoon feel like?
-            Describe it like you're remembering it, not imagining it. Write 3-4 sentences.
-          </p>
-        </div>
-
-        <!-- Field 6 -->
-        <div class="field">
-          <label for="f-pattern">What is the one pattern you keep repeating no matter how many times you swear you've broken it?</label>
-          <textarea id="f-pattern" name="The pattern you keep repeating" required></textarea>
-          <p class="helper">
-            Describe the cycle, not the label. What triggers it? What do you do
-            when it starts? How does it end? Example: 'Every time I get close to a
-            breakthrough, I find a reason to pivot to something new and start over
-            from scratch.' Be honest about the loop — that's where your blueprint
-            finds the exit.
-          </p>
-        </div>
-
-        <!-- Field 7 -->
-        <div class="field">
-          <label for="f-email">Where do we send your blueprint?</label>
-          <input type="email" id="f-email" name="email" placeholder="your@email.com" required />
-          <p class="helper">Your Sovereign Blueprint will be delivered here within 24 hours.</p>
-        </div>
-
-        <hr class="divider divider--bottom" aria-hidden="true" />
-
-        <button type="submit" class="cta" id="submit-btn">Enter the Threshold</button>
-
-        <p class="reassurance">
-          Your blueprint is generated in real time. No two are identical.
-          Delivered to your inbox within 24 hours.
+    <!-- ============================================================ -->
+    <!-- SCREEN 1 — THE ARRIVAL                                       -->
+    <!-- ============================================================ -->
+    <section class="screen active" id="screen-arrival">
+      <div class="arrival">
+        <div class="eyebrow">The Free Blueprint</div>
+        <h1 class="arrival-h">You are not random. You are <em>architecture.</em></h1>
+        <p class="arrival-sub">
+          The sky held one exact configuration the moment you took your first breath.
+          SOVRN reads it — with real astronomical calculation — and returns the three
+          things you were built to know: your soul architecture, your shadow pattern,
+          and your true north.
         </p>
-      </form>
-
-      <!-- SECTION 3 — THE FOOTER -->
-      <footer>
-        <p>SOVRN — 2026</p>
-      </footer>
+        <div class="arrival-not">
+          <b>This is not a horoscope.</b>
+          <span> A horoscope tells you about your week. Your Blueprint tells you
+          about your wiring — the gift you were issued, the loop that keeps stealing it
+          back, and the direction your life is actually trying to move.</span>
+        </div>
+        <div class="arrival-cta">
+          <button class="btn" id="begin-btn">
+            Begin the Diagnostic <span class="arrow">→</span>
+          </button>
+        </div>
+        <p class="arrival-meta">
+          Takes about four minutes · No account · Your Blueprint appears on this screen
+        </p>
+      </div>
     </section>
-  </main>
 
-  <!-- POST-SUBMISSION VIEW -->
-  <div id="threshold-crossed">
-    <!-- Archetype reveal (populated + revealed on submit; hidden if birth date can't be read) -->
-    <div class="archetype" id="archetype" style="display:none">
-      <div class="arch-line" id="arch-line-top" aria-hidden="true"></div>
-      <h3 class="arch-name" id="arch-name"></h3>
-      <p class="arch-sign" id="arch-sign"></p>
-      <p class="arch-desc" id="arch-desc"></p>
-      <div class="arch-line" id="arch-line-bottom" aria-hidden="true"></div>
-    </div>
+    <!-- ============================================================ -->
+    <!-- SCREEN 2 — COORDINATES                                       -->
+    <!-- ============================================================ -->
+    <section class="screen" id="screen-coordinates">
+      <div class="rail" data-step="2" aria-hidden="true"></div>
+      <div class="intake">
+        <button class="back-link" data-back="screen-arrival">← Back</button>
+        <div class="intake-head">
+          <div class="intake-kicker">Part 01 — Coordinates</div>
+          <h2 class="intake-title">The diagnostic begins with three coordinates.</h2>
+          <p class="intake-lede">
+            The chart is calculated from where and when you arrived. The more exact your
+            birth time, the sharper the reading — but we can work with what you have.
+          </p>
+        </div>
 
-    <h2 class="crossed-headline" id="crossed-headline">You've crossed the threshold.</h2>
+        <form id="coords-form" novalidate>
+          <div class="field">
+            <div class="field-label"><span class="idx">00 /</span> Your name <span class="opt">Optional</span></div>
+            <input type="text" id="f-name" name="Name" autocomplete="given-name" placeholder="What should the Blueprint call you?" />
+          </div>
 
-    <p class="crossed-body" id="crossed-body">
-      Your Sovereign Blueprint is being generated. It will arrive in your inbox within 24 hours.
-      <br /><br />
-      What was written in your chart before you were born is now being translated into language you can use.
-    </p>
+          <div class="field-row">
+            <div class="field">
+              <div class="field-label"><span class="idx">01 /</span> Date of birth</div>
+              <input type="date" id="f-date" name="Birth date" required />
+            </div>
+            <div class="field">
+              <div class="field-label"><span class="idx">02 /</span> Time of birth</div>
+              <input type="time" id="f-time" name="Birth time" />
+              <p class="helper">If you don't know it, leave it — we'll read the chart from midday.</p>
+            </div>
+          </div>
 
-    <div class="cohort" id="cohort">
-      <p class="cohort-intro">While your blueprint is being prepared —</p>
-      <p class="cohort-body">
-        The first SOVRN cohort opens July 2026. Twelve people. Eight weeks.
-        Full initiation with weekly live sessions and personal chart analysis.
-      </p>
-      <p class="cohort-price">Investment: $1,000</p>
-      <a class="cta" href="https://forms.gle/placeholder" target="_blank" rel="noopener">Apply for the Founding Cohort</a>
-      <br />
-      <button type="button" class="cohort-decline" id="decline-cohort">No thanks — I'll wait for the blueprint.</button>
-    </div>
+          <div class="field">
+            <div class="field-label"><span class="idx">03 /</span> Place of birth</div>
+            <input type="text" id="f-place" name="Birth place" autocomplete="off" placeholder="City, State / Country" />
+          </div>
+
+          <div class="intake-foot">
+            <button type="submit" class="btn btn--full" id="coords-next">
+              Continue to Self-Report <span class="arrow">→</span>
+            </button>
+            <p class="intake-reassure">Your data is used to calculate your chart and is never sold.</p>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SCREEN 3 — SELF-REPORT                                       -->
+    <!-- ============================================================ -->
+    <section class="screen" id="screen-report">
+      <div class="rail" data-step="3" aria-hidden="true"></div>
+      <div class="intake">
+        <button class="back-link" data-back="screen-coordinates">← Back</button>
+        <div class="intake-head">
+          <div class="intake-kicker">Part 02 — Self-Report</div>
+          <h2 class="intake-title">Now tell us what the chart can't see on its own.</h2>
+          <p class="intake-lede">
+            The sky gives us your structure. Your own words give us your evidence.
+            Answer honestly — the reading calibrates to what you write here.
+          </p>
+        </div>
+
+        <form id="report-form" novalidate>
+          <div class="field">
+            <div class="field-label"><span class="idx">04 /</span> The Fear</div>
+            <span class="field-q">Name the fear that runs your life — the one you've never said out loud.</span>
+            <textarea id="f-fear" name="The fear that runs your life" placeholder="Be specific. Not 'failure' — but what failure would look like. Not 'rejection' — but whose, and why it would break you."></textarea>
+          </div>
+
+          <div class="field">
+            <div class="field-label"><span class="idx">05 /</span> The Loop</div>
+            <span class="field-q">What is the one pattern you keep repeating — no matter how many times you swear you've broken it?</span>
+            <textarea id="f-pattern" name="The pattern you keep repeating" placeholder="Describe the cycle, not the label. What triggers it? What do you do when it starts? How does it always end?"></textarea>
+          </div>
+
+          <div class="field">
+            <div class="field-label"><span class="idx">06 /</span> The Life</div>
+            <span class="field-q">Describe a single ordinary day in the life you know you're meant to live.</span>
+            <textarea id="f-day" name="A single day in the life you are meant to live" placeholder="Not the vision board — the Tuesday. What do you wake up to? What work are you doing? Who is around you? Describe it like you're remembering it."></textarea>
+          </div>
+
+          <div class="field">
+            <div class="field-label"><span class="idx">07 /</span> Delivery</div>
+            <span class="field-q">Where should we send your written Blueprint to keep?</span>
+            <input type="email" id="f-email" name="email" autocomplete="email" placeholder="your@email.com" />
+            <p class="helper">Your Blueprint appears on the next screen instantly. We'll also send a written copy here.</p>
+          </div>
+
+          <div class="intake-foot">
+            <button type="submit" class="btn btn--full" id="report-next">
+              Generate My Blueprint <span class="arrow">→</span>
+            </button>
+            <p class="intake-reassure">Calculated on your device from the position of the sky at your birth.</p>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SCREEN 4 — THE BLUEPRINT                                     -->
+    <!-- ============================================================ -->
+    <section class="screen" id="screen-blueprint">
+      <div class="rail" data-step="4" aria-hidden="true"></div>
+      <div class="blueprint">
+        <div class="report-head">
+          <span class="r-title">Sovereign Blueprint</span>
+          <span class="r-id" id="bp-id">SVRN·—</span>
+        </div>
+
+        <div class="subject">
+          <div class="subject-for">Prepared for</div>
+          <h2 class="subject-name" id="bp-name">You</h2>
+
+          <div class="coords" id="bp-coords">
+            <div class="coord">
+              <div class="c-key">Sun · Identity</div>
+              <div class="c-val"><span class="glyph" id="sun-glyph">☉</span><span id="sun-sign">—</span></div>
+              <div class="c-sub" id="sun-mode">—</div>
+            </div>
+            <div class="coord">
+              <div class="c-key">Moon · Inner</div>
+              <div class="c-val"><span class="glyph" id="moon-glyph">☾</span><span id="moon-sign">—</span></div>
+              <div class="c-sub" id="moon-mode">—</div>
+            </div>
+            <div class="coord">
+              <div class="c-key">Polarity · Aim</div>
+              <div class="c-val"><span class="glyph" id="tn-glyph">△</span><span id="tn-sign">—</span></div>
+              <div class="c-sub">True north</div>
+            </div>
+          </div>
+          <p class="born-line" id="bp-born"></p>
+        </div>
+
+        <!-- 01 SOUL ARCHITECTURE -->
+        <div class="diag">
+          <div class="diag-head">
+            <span class="diag-no">01</span>
+            <span class="diag-title">Soul Architecture
+              <span class="diag-source" id="soul-source">The gift you were issued</span>
+            </span>
+          </div>
+          <p class="diag-body"><span class="lead-in" id="soul-name"></span> <span id="soul-body"></span></p>
+        </div>
+
+        <!-- 02 SHADOW PATTERN -->
+        <div class="diag">
+          <div class="diag-head">
+            <span class="diag-no">02</span>
+            <span class="diag-title">Shadow Pattern
+              <span class="diag-source" id="shadow-source">The loop that steals it back</span>
+            </span>
+          </div>
+          <p class="diag-body" id="shadow-body"></p>
+          <div class="echo" id="shadow-echo" style="display:none">
+            <div class="echo-label">You named your loop</div>
+            <p class="echo-quote" id="shadow-quote"></p>
+            <p class="echo-read" id="shadow-read"></p>
+          </div>
+        </div>
+
+        <!-- 03 TRUE NORTH -->
+        <div class="diag">
+          <div class="diag-head">
+            <span class="diag-no">03</span>
+            <span class="diag-title">True North
+              <span class="diag-source" id="tn-source">The direction your life is trying to move</span>
+            </span>
+          </div>
+          <p class="diag-body" id="tn-body"></p>
+          <div class="echo" id="tn-echo" style="display:none">
+            <div class="echo-label">The life you described</div>
+            <p class="echo-quote" id="tn-quote"></p>
+            <p class="echo-read" id="tn-read"></p>
+          </div>
+        </div>
+
+        <!-- WITHHELD -->
+        <div class="withheld">
+          <span class="w-icon">✕</span>
+          <div>
+            <div class="w-key">Withheld — Rising Sign & Full Placements</div>
+            <div class="w-text">Your ascendant, houses, and transit weather require your exact birth time and coordinates. They unlock inside the transformation.</div>
+          </div>
+        </div>
+
+        <!-- BRIDGE -->
+        <div class="bp-bridge">
+          <div class="b-eyebrow">This is the diagnosis</div>
+          <p class="b-line">
+            A diagnosis names the pattern. It doesn't <em>rewire</em> it.
+            That is the work — and it starts the moment you decide.
+          </p>
+          <button class="btn" id="to-bridge">
+            Begin Your Transformation <span class="arrow">→</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SCREEN 5 — THE BRIDGE                                        -->
+    <!-- ============================================================ -->
+    <section class="screen" id="screen-bridge">
+      <div class="bridge">
+        <div class="bridge-kicker">Phase Two — The Daily Practice</div>
+        <h2 class="bridge-h">Your Blueprint was the <em>diagnosis.</em> This is the treatment.</h2>
+        <p class="bridge-sub">
+          Reading your pattern changes nothing. Interrupting it — one deliberate action at a time,
+          calibrated to your chart and today's sky — is what rewrites the identity underneath it.
+          SOVRN turns your Blueprint into a daily practice.
+        </p>
+
+        <div class="phases">
+          <div class="phase">
+            <div class="p-no">01</div>
+            <div class="p-name">Rewire</div>
+            <div class="p-desc">Catch a limiting belief. The app returns its chart-aligned correction and installs it in a 60-second visualization.</div>
+          </div>
+          <div class="phase">
+            <div class="p-no">02</div>
+            <div class="p-name">Activate</div>
+            <div class="p-desc">One precise mission a day, tuned to your placements and the current transits, engineered to interrupt your shadow loop.</div>
+          </div>
+          <div class="phase">
+            <div class="p-no">03</div>
+            <div class="p-name">Track</div>
+            <div class="p-desc">Daily check-ins and a weekly briefing that shows your behavior moving against the weather of the sky.</div>
+          </div>
+        </div>
+
+        <div class="cohort-card">
+          <div class="cohort-tag">The Founding Cohort</div>
+          <p class="cohort-body">
+            The first SOVRN cohort opens in twelve people to a full, guided initiation —
+            weekly live sessions, a complete natal chart analysis, and the daily practice built
+            around your Blueprint.
+          </p>
+          <div class="cohort-meta">
+            <div class="cm"><div class="cm-k">Seats</div><div class="cm-v">12</div></div>
+            <div class="cm"><div class="cm-k">Duration</div><div class="cm-v">8 weeks</div></div>
+            <div class="cm"><div class="cm-k">Investment</div><div class="cm-v red">$1,000</div></div>
+          </div>
+          <a class="btn btn--full" href="https://forms.gle/placeholder" target="_blank" rel="noopener">
+            Apply for the Founding Cohort <span class="arrow">→</span>
+          </a>
+          <button class="bridge-decline" id="decline">Not yet — I'll sit with my Blueprint first.</button>
+        </div>
+
+        <footer>
+          <span class="f-mark">SOVRN</span>
+          <span class="f-note">Remember who you are · MMXXVI</span>
+        </footer>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- THE SCAN — calculation moment -->
+  <div id="scan" aria-hidden="true">
+    <div class="scan-ring"><span class="dot"></span></div>
+    <div class="scan-lines" id="scan-lines"></div>
+    <div class="scan-label">Casting the chart</div>
   </div>
 
   <script>
-    (function () {
-      'use strict';
+  (function () {
+    'use strict';
 
-      /* ---------------------------------------------------------------- *
-       *  THE STARFIELD — tiny dots drifting slowly through the void
-       * ---------------------------------------------------------------- */
-      (function starfield() {
-        var canvas = document.getElementById('starfield');
-        if (!canvas || !canvas.getContext) return;
+    /* ================================================================ *
+     *  ASTRONOMY — real calculation from birth data
+     * ================================================================ */
+    var SIGNS = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra',
+                 'Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+    var GLYPH = { Aries:'♈', Taurus:'♉', Gemini:'♊', Cancer:'♋', Leo:'♌',
+                  Virgo:'♍', Libra:'♎', Scorpio:'♏', Sagittarius:'♐',
+                  Capricorn:'♑', Aquarius:'♒', Pisces:'♓' };
+    var ELEMENT = { Aries:'Fire', Leo:'Fire', Sagittarius:'Fire',
+                    Taurus:'Earth', Virgo:'Earth', Capricorn:'Earth',
+                    Gemini:'Air', Libra:'Air', Aquarius:'Air',
+                    Cancer:'Water', Scorpio:'Water', Pisces:'Water' };
+    var MODALITY = { Aries:'Cardinal', Cancer:'Cardinal', Libra:'Cardinal', Capricorn:'Cardinal',
+                     Taurus:'Fixed', Leo:'Fixed', Scorpio:'Fixed', Aquarius:'Fixed',
+                     Gemini:'Mutable', Virgo:'Mutable', Sagittarius:'Mutable', Pisces:'Mutable' };
+    var POLARITY = { Aries:'Libra', Libra:'Aries', Taurus:'Scorpio', Scorpio:'Taurus',
+                     Gemini:'Sagittarius', Sagittarius:'Gemini', Cancer:'Capricorn',
+                     Capricorn:'Cancer', Leo:'Aquarius', Aquarius:'Leo',
+                     Virgo:'Pisces', Pisces:'Virgo' };
 
-        var prefersReduced =
-          window.matchMedia &&
-          window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // Western tropical Sun sign from month(1-12) + day.
+    function sunSign(month, day) {
+      var last = [19,18,20,19,20,20,22,22,22,22,21,21];
+      var order = ['Capricorn','Aquarius','Pisces','Aries','Taurus','Gemini',
+                   'Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn'];
+      return day > last[month - 1] ? order[month] : order[month - 1];
+    }
 
-        var ctx = canvas.getContext('2d');
-        var dpr = Math.min(window.devicePixelRatio || 1, 2);
-        var stars = [];
-        var w = 0, h = 0;
+    function norm360(x) { x = x % 360; return x < 0 ? x + 360 : x; }
 
-        function seed() {
-          // ~1 star per 9000px² of viewport, kept modest so text stays dominant
-          var count = Math.min(220, Math.round((w * h) / 9000));
-          stars = [];
-          for (var i = 0; i < count; i++) {
-            stars.push({
-              x: Math.random() * w,
-              y: Math.random() * h,
-              r: Math.random() * 1 + 0.5,                 // 0.5–1.5px radius (1–2px dots)
-              o: Math.random() * 0.3 + 0.3,               // 0.3–0.6 opacity
-              vx: (Math.random() - 0.5) * 0.04,           // very slow horizontal drift
-              vy: (Math.random() - 0.5) * 0.04            // very slow vertical drift
-            });
-          }
+    // Julian Day from a Gregorian calendar date + fractional hour (UT-approx).
+    function julianDay(year, month, day, hour) {
+      if (month <= 2) { year -= 1; month += 12; }
+      var A = Math.floor(year / 100);
+      var B = 2 - A + Math.floor(A / 4);
+      var jd = Math.floor(365.25 * (year + 4716)) +
+               Math.floor(30.6001 * (month + 1)) +
+               day + B - 1524.5;
+      return jd + (hour == null ? 12 : hour) / 24;
+    }
+
+    // Moon ecliptic longitude (Meeus, main periodic terms). Reliable to a
+    // fraction of a degree — enough to resolve the sign save for cusp births.
+    function moonLongitude(jd) {
+      var T = (jd - 2451545.0) / 36525;
+      var d2r = Math.PI / 180;
+      var Lp = 218.3164477 + 481267.88123421 * T;
+      var D  = 297.8501921 + 445267.1114034 * T;
+      var M  = 357.5291092 + 35999.0502909 * T;
+      var Mp = 134.9633964 + 477198.8675055 * T;
+      var F  =  93.2720950 + 483202.0175233 * T;
+      var lon = Lp
+        + 6.289 * Math.sin(Mp * d2r)
+        + 1.274 * Math.sin((2 * D - Mp) * d2r)
+        + 0.658 * Math.sin(2 * D * d2r)
+        + 0.214 * Math.sin(2 * Mp * d2r)
+        - 0.186 * Math.sin(M * d2r)
+        - 0.114 * Math.sin(2 * F * d2r)
+        + 0.059 * Math.sin((2 * D - 2 * Mp) * d2r)
+        + 0.057 * Math.sin((2 * D - M - Mp) * d2r)
+        + 0.053 * Math.sin((2 * D + Mp) * d2r)
+        + 0.046 * Math.sin((2 * D - M) * d2r)
+        - 0.041 * Math.sin((M - Mp) * d2r)
+        - 0.035 * Math.sin(D * d2r)
+        - 0.031 * Math.sin((M + Mp) * d2r);
+      return norm360(lon);
+    }
+    function signFromLongitude(lon) { return SIGNS[Math.floor(norm360(lon) / 30)]; }
+
+    /* ================================================================ *
+     *  CONTENT — the three diagnostic layers
+     * ================================================================ */
+
+    // 01 · SOUL ARCHITECTURE — keyed to the Sun sign (the gift issued).
+    var SOUL = {
+      Aries:       { name: 'The Pioneer.',            body: 'You are engineered for initiation. Where others deliberate, something in you simply moves — you are the one who proves the door was never locked. Your courage is not the absence of fear; it is fear rendered irrelevant by momentum.' },
+      Taurus:      { name: 'The Builder.',            body: 'You are built to make things real. You hold steady while the world flails, turning intention into something that can be touched, kept, and trusted. Your presence itself is a kind of security that other people quietly borrow.' },
+      Gemini:      { name: 'The Translator.',         body: 'You are wired to move between worlds. You can hold two truths at once and find the language that bridges them — your mind is the switchboard the rest of us route our confusion through. Your curiosity is not a distraction from the work; it is the work.' },
+      Cancer:      { name: 'The Guardian.',           body: 'You feel the room before anyone speaks. You are built to protect what is tender — to create the safety inside which other people finally become themselves. Your sensitivity is not fragility; it is high-resolution perception.' },
+      Leo:         { name: 'The Sovereign.',          body: 'You are made to be seen — not for vanity, but because your visible aliveness gives others permission to stop hiding. Fully lit, you are a proof of concept for a larger life. Generosity is your native currency; the room warms when you enter it.' },
+      Virgo:       { name: 'The Craftsman.',          body: 'You see the flaw and the fix in the same glance. You are built to refine raw material — a system, a body, a piece of work — into something honest and exact. Your attention is a form of devotion most people never receive from anyone.' },
+      Libra:       { name: 'The Diplomat.',           body: 'You are engineered for balance — you feel imbalance as physical discomfort and move instinctively to restore it. You can hold opposing sides without contempt for either, which is rarer than genius. Beauty, to you, is not decoration; it is information.' },
+      Scorpio:     { name: 'The Alchemist.',          body: 'You are built to go where others will not look. You see through the surface to the real transaction underneath, unafraid of the dark because you know it is where transformation is manufactured. Your intensity is medicine, not damage.' },
+      Sagittarius: { name: 'The Seeker.',             body: 'You are wired for the horizon. You need meaning the way others need air, and your restlessness is not a flaw but a compass pointed at a larger truth. When you speak from conviction, people follow the aim, not the order.' },
+      Capricorn:   { name: 'The Architect.',          body: 'You are built to build what outlives you. You understand time as a material — that anything real is constructed slowly, under load, with discipline. Your authority is not granted; it is earned, and once earned it cannot be taken back.' },
+      Aquarius:    { name: 'The Visionary.',          body: 'You see the pattern everyone else is standing inside. You are built to break what has calcified and prototype what comes next; your detachment is not coldness but altitude. You belong to the future, and part of you already lives there.' },
+      Pisces:      { name: 'The Mystic.',             body: 'You are permeable to what others cannot perceive — the current beneath the words, the feeling under the room. You are built to dissolve boundaries and return with something the rest of us can use. Your sensitivity is a receiver, not a wound.' }
+    };
+
+    // 02 · SHADOW PATTERN — keyed to the Moon sign (the emotional loop).
+    var SHADOW = {
+      Aries:       'When you feel unseen, you manufacture conflict to feel alive — then read the wreckage as proof you are "too much." The loop: provoke, burn, isolate, repeat. What you call impatience is often an unmet need wearing armor.',
+      Taurus:      'You mistake stillness for safety and stay in the known long past its expiration. Threatened, you dig in and call the paralysis "being realistic." The loop: cling, stagnate, resent, repeat. Comfort slowly becomes the cage.',
+      Gemini:      'When feeling turns heavy you escape into your head — analyzing, narrating, joking — anything but staying in the body where the ache actually lives. The loop: distract, rationalize, scatter, repeat. You know everything about yourself except how you feel.',
+      Cancer:      'You give in order to be needed, then quietly resent that no one gives back — but you never actually asked. The loop: over-give, withdraw, wound in silence, repeat. You confuse being needed with being loved, and abandon yourself to keep the peace.',
+      Leo:         'When the attention drops you assume you are being rejected, and you perform harder to win back a love you were never actually losing. The loop: shine, need, doubt, repeat. Your worth quietly becomes a function of the applause.',
+      Virgo:       'You control what you can reach because the size of what you cannot terrifies you. Anxious, you find the flaw — in the plan, in yourself, in them. The loop: critique, tighten, exhaust, repeat. Perfect becomes the enemy of finished, and of felt.',
+      Libra:       'You dissolve into what others want and call it harmony. When conflict looms you abandon your own position to keep the connection, then resent the self-erasure. The loop: accommodate, resent, withdraw, repeat. You lose yourself trying not to lose them.',
+      Scorpio:     'You test people to see if they will leave, then read their fatigue as the betrayal you predicted. Hurt, you go silent and strategic. The loop: attach, suspect, withhold, repeat. Your fear of being controlled makes you try to control everything.',
+      Sagittarius: 'The moment intimacy asks something of you, you find a reason the horizon looks better. Cornered by feeling, you leave — geographically or emotionally. The loop: expand, avoid, flee, repeat. You call it freedom, but often it is just the exit.',
+      Capricorn:   'You earn your way toward a worth you never quite reach, because rest feels like failure and needing help feels like weakness. The loop: achieve, harden, isolate, repeat. You built a self that performs and forgot where you left the one that feels.',
+      Aquarius:    'When closeness threatens your autonomy you go cool and observational — present, but behind glass. The loop: connect, detach, rationalize the distance, repeat. You guard your freedom so well that no one is allowed to know you have needs at all.',
+      Pisces:      'When reality turns sharp you dissolve — into fantasy, into other people, into the fog. You absorb everyone’s feelings and lose the thread of your own. The loop: merge, overwhelm, escape, repeat. You martyr yourself and call it compassion.'
+    };
+
+    // 03 · TRUE NORTH — the polarity medicine, keyed to the Sun sign.
+    var TRUENORTH = {
+      Aries:       'Your growth is not more force — it is partnership. True north asks you to stay in the room after the spark, to let another person’s needs shape the plan without feeling erased. You become powerful when you stop conquering and start collaborating.',
+      Taurus:      'Your growth is not more security — it is surrender. True north asks you to let something be destroyed so something truer can be built, to trust the depths you cannot control. You become free when you stop clutching and let life move through you.',
+      Gemini:      'Your growth is not more information — it is meaning. True north asks you to stop collecting and commit to one truth long enough to live inside it. You become wise when you trade the width of your curiosity for the depth of a single conviction.',
+      Cancer:      'Your growth is not more caretaking — it is authority. True north asks you to step out of the private world and build something in the public one, to be respected and not only needed. You rise when you mother the world instead of martyring to it.',
+      Leo:         'Your growth is not more recognition — it is contribution. True north asks you to turn your fire toward something larger than your own reflection, to lead for the many rather than perform for the few. You become radiant when the light stops being about you.',
+      Virgo:       'Your growth is not more precision — it is faith. True north asks you to release the flaw and trust the whole, to serve from overflow rather than anxiety. You are healed the moment you accept that you were never broken — only exacting.',
+      Libra:       'Your growth is not more harmony — it is self. True north asks you to name your own desire and act on it before consulting the room, to risk the conflict that honesty requires. You become whole when you stop asking permission to exist.',
+      Scorpio:     'Your growth is not more intensity — it is peace. True north asks you to let the simple thing be enough, to build trust in daylight instead of testing it in the dark. You are transformed the moment you finally let yourself be safe.',
+      Sagittarius: 'Your growth is not more distance — it is presence. True north asks you to stay, to learn the person and the place in front of you rather than the one over the next hill. Freedom, it turns out, was always in the details you kept skipping.',
+      Capricorn:   'Your growth is not more achievement — it is belonging. True north asks you to let people in before you have earned it, to feel your way through instead of managing it. You arrive when you realize you were always allowed to need.',
+      Aquarius:    'Your growth is not more detachment — it is heart. True north asks you to come down from altitude and be personally, warmly seen — to let one person matter more than the principle. You change the world only when you are willing to be inside it.',
+      Pisces:      'Your growth is not more transcendence — it is form. True north asks you to bring the vision into the body, the schedule, the practice — to serve the infinite through the finite. You become powerful when you give your dreams an address.'
+    };
+
+    /* ================================================================ *
+     *  STATE + NAVIGATION
+     * ================================================================ */
+    var state = { name:'', date:'', time:'', place:'', fear:'', pattern:'', day:'', email:'' };
+    var FORMSPREE = 'https://formspree.io/f/xdarebvj';
+
+    var screens = {
+      arrival:     document.getElementById('screen-arrival'),
+      coordinates: document.getElementById('screen-coordinates'),
+      report:      document.getElementById('screen-report'),
+      blueprint:   document.getElementById('screen-blueprint'),
+      bridge:      document.getElementById('screen-bridge')
+    };
+    var rails = document.querySelectorAll('.rail');
+
+    function showScreen(key) {
+      Object.keys(screens).forEach(function (k) {
+        screens[k].classList.toggle('active', k === key);
+      });
+      // reveal rails on the intake/result screens
+      rails.forEach(function (r) {
+        r.classList.toggle('show', key === 'coordinates' || key === 'report' || key === 'blueprint');
+      });
+      window.scrollTo(0, 0);
+    }
+
+    // Build each progress rail once.
+    var RAIL_STEPS = [
+      { n: '01', label: 'Coordinates' },
+      { n: '02', label: 'Self-Report' },
+      { n: '03', label: 'Blueprint' }
+    ];
+    rails.forEach(function (rail) {
+      var here = parseInt(rail.getAttribute('data-step'), 10); // 2,3,4
+      var current = here - 1; // 1-based step index (1,2,3)
+      RAIL_STEPS.forEach(function (s, i) {
+        var idx = i + 1;
+        var step = document.createElement('div');
+        step.className = 'rail-step' + (idx < current ? ' done' : '') + (idx === current ? ' current' : '');
+        step.innerHTML = '<span class="num">' + (idx < current ? '✓' : s.n) + '</span><span class="label">' + s.label + '</span>';
+        rail.appendChild(step);
+        if (idx < RAIL_STEPS.length) {
+          var line = document.createElement('div');
+          line.className = 'rail-line';
+          rail.appendChild(line);
         }
+      });
+    });
 
-        function resize() {
-          w = window.innerWidth;
-          h = window.innerHeight;
-          canvas.width = w * dpr;
-          canvas.height = h * dpr;
-          canvas.style.width = w + 'px';
-          canvas.style.height = h + 'px';
-          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-          seed();
-        }
+    /* ================================================================ *
+     *  WIRING — arrival + navigation
+     * ================================================================ */
+    document.getElementById('begin-btn').addEventListener('click', function () {
+      showScreen('coordinates');
+    });
+    document.getElementById('home-mark').addEventListener('click', function () {
+      showScreen('arrival');
+    });
+    document.querySelectorAll('[data-back]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var target = b.getAttribute('data-back').replace('screen-', '');
+        showScreen(target);
+      });
+    });
 
-        function draw() {
-          ctx.clearRect(0, 0, w, h);
-          for (var i = 0; i < stars.length; i++) {
-            var s = stars[i];
-            s.x += s.vx;
-            s.y += s.vy;
+    // Coordinates → Report
+    document.getElementById('coords-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var dateEl = document.getElementById('f-date');
+      if (!dateEl.value) { dateEl.focus(); dateEl.reportValidity && dateEl.reportValidity(); return; }
+      state.name  = document.getElementById('f-name').value.trim();
+      state.date  = dateEl.value;
+      state.time  = document.getElementById('f-time').value;
+      state.place = document.getElementById('f-place').value.trim();
+      showScreen('report');
+    });
 
-            // Wrap around the edges so the field feels endless
-            if (s.x < 0) s.x = w; else if (s.x > w) s.x = 0;
-            if (s.y < 0) s.y = h; else if (s.y > h) s.y = 0;
+    // Report → Scan → Blueprint
+    document.getElementById('report-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      state.fear    = document.getElementById('f-fear').value.trim();
+      state.pattern = document.getElementById('f-pattern').value.trim();
+      state.day     = document.getElementById('f-day').value.trim();
+      state.email   = document.getElementById('f-email').value.trim();
 
-            ctx.beginPath();
-            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(245, 240, 232, ' + s.o + ')';
-            ctx.fill();
-          }
-          window.requestAnimationFrame(draw);
-        }
+      var chart = computeChart();
+      submitLead(chart);          // fire the lead to Formspree in the background
+      runScan(function () {
+        renderBlueprint(chart);
+        showScreen('blueprint');
+      });
+    });
 
-        resize();
-        window.addEventListener('resize', resize);
+    document.getElementById('to-bridge').addEventListener('click', function () {
+      showScreen('bridge');
+    });
+    document.getElementById('decline').addEventListener('click', function () {
+      showScreen('blueprint');
+    });
 
-        if (prefersReduced) {
-          // Honor reduced-motion: paint a still field, no drift loop.
-          ctx.clearRect(0, 0, w, h);
-          for (var i = 0; i < stars.length; i++) {
-            var s = stars[i];
-            ctx.beginPath();
-            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(245, 240, 232, ' + s.o + ')';
-            ctx.fill();
-          }
+    /* ================================================================ *
+     *  COMPUTE
+     * ================================================================ */
+    function computeChart() {
+      // date input is YYYY-MM-DD; time is HH:MM (may be empty).
+      var parts = state.date.split('-');
+      var year  = parseInt(parts[0], 10);
+      var month = parseInt(parts[1], 10);
+      var day   = parseInt(parts[2], 10);
+
+      var hour = 12;
+      if (state.time) {
+        var t = state.time.split(':');
+        hour = parseInt(t[0], 10) + (parseInt(t[1], 10) || 0) / 60;
+      }
+
+      var sun  = sunSign(month, day);
+      var jd   = julianDay(year, month, day, hour);
+      var moon = signFromLongitude(moonLongitude(jd));
+      var tn   = POLARITY[sun];
+
+      return {
+        sun: sun, moon: moon, trueNorth: tn,
+        year: year, month: month, day: day,
+        hadTime: !!state.time
+      };
+    }
+
+    /* ================================================================ *
+     *  THE SCAN
+     * ================================================================ */
+    function runScan(done) {
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var scan  = document.getElementById('scan');
+      var lines = document.getElementById('scan-lines');
+      var steps = [
+        'Casting the chart from your coordinates',
+        'Resolving your solar architecture',
+        'Mapping the shadow',
+        'Locating true north'
+      ];
+      scan.classList.add('active');
+      lines.textContent = '';
+
+      if (reduce) {
+        lines.textContent = 'Reading complete.';
+        window.setTimeout(function () { scan.classList.remove('active'); done(); }, 500);
+        return;
+      }
+
+      var i = 0;
+      (function next() {
+        if (i < steps.length) {
+          lines.innerHTML = '<span class="done-mark">›</span>' + steps[i];
+          i++;
+          window.setTimeout(next, 620);
         } else {
-          window.requestAnimationFrame(draw);
+          lines.innerHTML = '<span class="done-mark">✓</span>Reading complete.';
+          window.setTimeout(function () {
+            scan.classList.remove('active');
+            done();
+          }, 620);
         }
       })();
+    }
 
-      /* ---------------------------------------------------------------- *
-       *  THE ARRIVAL — black curtain, then staggered fade-ins
-       * ---------------------------------------------------------------- */
-      var curtain     = document.getElementById('curtain');
-      var wordmark    = document.getElementById('wordmark');
-      var headline    = document.getElementById('headline');
-      var subheadline = document.getElementById('subheadline');
-      var scrollInd   = document.getElementById('scroll-indicator');
+    /* ================================================================ *
+     *  RENDER THE BLUEPRINT
+     * ================================================================ */
+    var MONTH_NAMES = ['January','February','March','April','May','June',
+                       'July','August','September','October','November','December'];
 
-      // Page sits in pure black for 1.5s, then the transmission begins.
-      window.setTimeout(function () {
-        curtain.classList.add('lifted');
-        wordmark.style.opacity = '1';          // wordmark fades in first
+    function firstName(full) {
+      if (!full) return '';
+      return full.split(/\s+/)[0];
+    }
 
-        // headline 400ms after the wordmark
-        window.setTimeout(function () {
-          headline.classList.add('visible');
-        }, 400);
+    // A short deterministic report id from the birth date + signs.
+    function reportId(chart) {
+      var s = SIGNS.indexOf(chart.sun) + 1;
+      var m = SIGNS.indexOf(chart.moon) + 1;
+      var seed = (chart.year * 372 + chart.month * 31 + chart.day) % 9973;
+      var pad = ('0000' + seed).slice(-4);
+      var si = chart.sun.slice(0, 2).toUpperCase();
+      return 'SVRN·' + si + '-' + ('0' + s).slice(-2) + ('0' + m).slice(-2) + '-' + pad;
+    }
 
-        // subheadline 600ms after the headline
-        window.setTimeout(function () {
-          subheadline.classList.add('visible');
-        }, 1000);
+    function setText(id, txt) { document.getElementById(id).textContent = txt; }
 
-        // the golden thread, settling in last
-        window.setTimeout(function () {
-          scrollInd.classList.add('visible');
-        }, 1600);
-      }, 1500);
+    function renderBlueprint(chart) {
+      var name = firstName(state.name);
 
-      /* ---------------------------------------------------------------- *
-       *  SCROLL-TRIGGERED FADE-INS — each section arrives as you reach it
-       * ---------------------------------------------------------------- */
-      var revealEls = document.querySelectorAll('.reveal');
+      // Header
+      setText('bp-id', reportId(chart));
+      var subj = document.getElementById('bp-name');
+      subj.innerHTML = name ? esc(name) + ', <em>read closely.</em>' : 'Read this <em>closely.</em>';
 
-      if ('IntersectionObserver' in window) {
-        var observer = new IntersectionObserver(function (entries) {
-          entries.forEach(function (entry) {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('visible');
-              observer.unobserve(entry.target);
-            }
-          });
-        }, { threshold: 0.15 });
+      // Coordinates readout
+      setText('sun-glyph', GLYPH[chart.sun]);
+      setText('sun-sign', chart.sun);
+      setText('sun-mode', ELEMENT[chart.sun] + ' · ' + MODALITY[chart.sun]);
+      setText('moon-glyph', GLYPH[chart.moon]);
+      setText('moon-sign', chart.moon);
+      setText('moon-mode', ELEMENT[chart.moon] + ' · ' + MODALITY[chart.moon]);
+      setText('tn-glyph', GLYPH[chart.trueNorth]);
+      setText('tn-sign', chart.trueNorth);
 
-        revealEls.forEach(function (el) { observer.observe(el); });
+      // Born line
+      var born = 'Born ' + MONTH_NAMES[chart.month - 1] + ' ' + chart.day + ', ' + chart.year;
+      if (state.time) born += ' · ' + formatTime(state.time);
+      if (state.place) born += ' · ' + state.place;
+      if (!chart.hadTime) born += ' · time approximated to midday';
+      setText('bp-born', born);
+
+      // 01 Soul architecture
+      setText('soul-source', 'Sun in ' + chart.sun + ' — the gift you were issued');
+      setText('soul-name', SOUL[chart.sun].name);
+      setText('soul-body', SOUL[chart.sun].body);
+
+      // 02 Shadow pattern
+      setText('shadow-source', 'Moon in ' + chart.moon + ' — the loop that steals it back');
+      setText('shadow-body', SHADOW[chart.moon]);
+      var shadowEcho = document.getElementById('shadow-echo');
+      if (state.pattern) {
+        setText('shadow-quote', '“' + state.pattern + '”');
+        setText('shadow-read',
+          'This is the same loop, in your own handwriting. Your ' + chart.moon +
+          ' Moon runs it whenever it feels unsafe — and naming it, exactly as you did, is the first place the pattern loses its grip.');
+        shadowEcho.style.display = 'block';
       } else {
-        // No IO support — reveal everything rather than hide it.
-        revealEls.forEach(function (el) { el.classList.add('visible'); });
+        shadowEcho.style.display = 'none';
       }
 
-      /* ---------------------------------------------------------------- *
-       *  THE TRANSFORMATION — submit, then cross the threshold
-       * ---------------------------------------------------------------- */
-      var form       = document.getElementById('blueprint-form');
-      var main       = document.getElementById('main-content');
-      var crossed    = document.getElementById('threshold-crossed');
-      var submitBtn  = document.getElementById('submit-btn');
-
-      var crossedHeadline = document.getElementById('crossed-headline');
-      var crossedBody     = document.getElementById('crossed-body');
-      var cohort          = document.getElementById('cohort');
-      var declineCohort   = document.getElementById('decline-cohort');
-
-      // Archetype reveal elements
-      var birthDateInput = document.getElementById('f-birthdate');
-      var archetypeEl    = document.getElementById('archetype');
-      var archLineTop    = document.getElementById('arch-line-top');
-      var archName       = document.getElementById('arch-name');
-      var archSign       = document.getElementById('arch-sign');
-      var archDesc       = document.getElementById('arch-desc');
-      var archLineBot    = document.getElementById('arch-line-bottom');
-
-      /* ---------------------------------------------------------------- *
-       *  SUN SIGN ARCHETYPE — name + initiation per Western tropical sign
-       * ---------------------------------------------------------------- */
-      var ARCHETYPES = {
-        Aries:       { name: 'The Pioneer',           desc: 'You arrived to begin what others cannot. Your initiation is learning that starting is not the same as finishing — and that both require equal fire.' },
-        Taurus:      { name: 'The Sovereign Builder',  desc: 'You arrived to build what lasts. Your initiation is learning that true security comes from within, not from what you accumulate.' },
-        Gemini:      { name: 'The Oracle of Tongues',  desc: 'You arrived to translate between worlds. Your initiation is learning that your many voices are not distraction — they are range.' },
-        Cancer:      { name: 'The Guardian',           desc: 'You arrived to hold what others cannot carry. Your initiation is learning that nurturing yourself is the source of everything you give.' },
-        Leo:         { name: 'The Sovereign Flame',    desc: 'You arrived to perform the truth others are afraid to embody. Your initiation is learning that your light does not need an audience to be real.' },
-        Virgo:       { name: 'The Architect of Order', desc: 'You arrived to refine the raw material of existence into something sacred. Your initiation is learning that perfection is not the goal — devotion is.' },
-        Libra:       { name: 'The Emissary',           desc: 'You arrived to restore balance where it has been lost. Your initiation is learning that harmony does not require your self-erasure.' },
-        Scorpio:     { name: 'The Initiator',          desc: 'You arrived to see what is hidden and name what others will not. Your initiation is learning that your intensity is medicine, not damage.' },
-        Sagittarius: { name: 'The Torch Bearer',       desc: 'You arrived to carry the torch into unknown territory. Your initiation is learning that freedom without depth is just running.' },
-        Capricorn:   { name: 'The Ancient Authority',  desc: 'You arrived to build structures that outlive you. Your initiation is learning that authority earned through integrity cannot be taken.' },
-        Aquarius:    { name: 'The Pattern Breaker',    desc: 'You arrived to break patterns that have calcified into prisons. Your initiation is learning that rebellion without vision is just noise.' },
-        Pisces:      { name: 'The Mystic Channel',     desc: 'You arrived to dissolve the boundaries between the visible and invisible. Your initiation is learning that your sensitivity is your superpower, not your wound.' }
-      };
-
-      var MONTHS = { jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6,
-                     jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12 };
-
-      // Western tropical Sun sign from month (1-12) + day-of-month.
-      function sunSign(month, day) {
-        var lastDay = [19, 18, 20, 19, 20, 20, 22, 22, 22, 22, 21, 21];
-        var signs = ['Capricorn', 'Aquarius', 'Pisces', 'Aries', 'Taurus',
-                     'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra',
-                     'Scorpio', 'Sagittarius', 'Capricorn'];
-        return day > lastDay[month - 1] ? signs[month] : signs[month - 1];
+      // 03 True north
+      setText('tn-source', 'Toward ' + chart.trueNorth + ' — the direction your life is trying to move');
+      setText('tn-body', TRUENORTH[chart.sun]);
+      var tnEcho = document.getElementById('tn-echo');
+      if (state.day) {
+        setText('tn-quote', '“' + state.day + '”');
+        setText('tn-read',
+          'Read it again. The life you described is not a fantasy — it is a description of ' +
+          chart.trueNorth + ' territory, the exact direction your chart is already pointing. You were not imagining it. You were remembering it.');
+        tnEcho.style.display = 'block';
+      } else {
+        tnEcho.style.display = 'none';
       }
+    }
 
-      function clampMD(month, day) {
-        if (!month || month < 1 || month > 12) return null;
-        if (!day || day < 1 || day > 31) return null;
-        return { month: month, day: day };
-      }
+    function formatTime(t) {
+      var p = t.split(':');
+      var h = parseInt(p[0], 10);
+      var m = p[1];
+      var ap = h >= 12 ? 'PM' : 'AM';
+      var h12 = h % 12; if (h12 === 0) h12 = 12;
+      return h12 + ':' + m + ' ' + ap;
+    }
 
-      // Best-effort parse of the free-text birth date into { month, day }.
-      function parseBirthDate(raw) {
-        if (!raw) return null;
-        var s = String(raw).toLowerCase().trim();
-        var nameKeys = 'jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec';
-
-        // Day + month name, e.g. "15 july 1990" — checked first so the day
-        // isn't mistaken for the leading digits of a trailing year.
-        var dm = s.match(new RegExp('(\\d{1,2})\\s+(' + nameKeys + ')'));
-        if (dm) return clampMD(MONTHS[dm[2]], parseInt(dm[1], 10));
-
-        // Month name + day, e.g. "july 15, 1990"
-        var md = s.match(new RegExp('(' + nameKeys + ')[a-z]*\\.?\\s+(\\d{1,2})'));
-        if (md) return clampMD(MONTHS[md[1]], parseInt(md[2], 10));
-
-        // Numeric, honoring the placeholder's Month / Day / Year order.
-        var num = s.match(/(\d{1,2})\s*[\/\-.]\s*(\d{1,2})(?:\s*[\/\-.]\s*(\d{2,4}))?/);
-        if (num) {
-          var month = parseInt(num[1], 10), day = parseInt(num[2], 10);
-          // If the first value can't be a month but the second can, it was Day/Month.
-          if (month > 12 && day <= 12) { var t = month; month = day; day = t; }
-          return clampMD(month, day);
-        }
-        return null;
-      }
-
-      // Populate + show the archetype block. Returns true if one was resolved.
-      function prepareArchetype() {
-        var parsed = parseBirthDate(birthDateInput && birthDateInput.value);
-        if (!parsed) return false;
-        var sign = sunSign(parsed.month, parsed.day);
-        var arc = ARCHETYPES[sign];
-        if (!arc) return false;
-        archName.textContent = arc.name;   // CSS renders it uppercase
-        archSign.textContent = sign + ' Sun';
-        archDesc.textContent = arc.desc;
-        archetypeEl.style.display = 'flex';
-        crossed.classList.add('has-archetype');
-        return true;
-      }
-
-      function crossThreshold(hasArchetype) {
-        // Dissolve the page content.
-        main.classList.add('dissolved');
-
-        // After the content has faded (600ms), bring up the new view.
-        window.setTimeout(function () {
-          main.style.display = 'none';
-          crossed.classList.add('active');
-          window.scrollTo(0, 0);
-
-          window.requestAnimationFrame(function () {
-            var base = 50; // when the "You've crossed the threshold." content begins
-
-            if (hasArchetype) {
-              // The card turns over in the void — the moment of recognition.
-              window.setTimeout(function () { archLineTop.classList.add('drawn'); }, 100);
-              window.setTimeout(function () { archName.classList.add('visible'); }, 750);   // 600ms after the line
-              window.setTimeout(function () { archSign.classList.add('visible'); }, 1150);  // 400ms after the name
-              window.setTimeout(function () { archDesc.classList.add('visible'); }, 1550);
-              window.setTimeout(function () { archLineBot.classList.add('drawn'); }, 1950);
-              base = 2400; // the rest of the page continues below the reveal
-            }
-
-            // Staggered fade-ins for the existing transmission.
-            window.setTimeout(function () { crossedHeadline.style.opacity = '1'; }, base);
-            window.setTimeout(function () { crossedBody.style.opacity = '1'; }, base + 800);
-            window.setTimeout(function () { cohort.style.opacity = '1'; }, base + 1600);
-          });
-        }, 600);
-      }
-
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Crossing…';
-
-        // Resolve the Sun sign archetype from the birth date before transforming.
-        var hasArchetype = prepareArchetype();
-
-        var data = new FormData(form);
-
-        // Submit to Formspree in the background; transform regardless so the
-        // visitor's experience is never interrupted by a network hiccup.
-        fetch(form.action, {
-          method: 'POST',
-          body: data,
-          headers: { 'Accept': 'application/json' }
-        }).then(function () {
-          crossThreshold(hasArchetype);
-        }).catch(function () {
-          // Even on failure we honor the threshold; submission can be retried server-side.
-          crossThreshold(hasArchetype);
-        });
+    function esc(s) {
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
       });
+    }
 
-      // "No thanks" simply hides the cohort offer.
-      declineCohort.addEventListener('click', function () {
-        cohort.style.transition = 'opacity 600ms ease-in-out';
-        cohort.style.opacity = '0';
-        window.setTimeout(function () { cohort.style.display = 'none'; }, 600);
-      });
-    })();
+    /* ================================================================ *
+     *  LEAD CAPTURE — send everything to Formspree, silently
+     * ================================================================ */
+    function submitLead(chart) {
+      if (!state.email) return; // nothing to deliver to; skip quietly
+      var fd = new FormData();
+      fd.append('Name', state.name);
+      fd.append('email', state.email);
+      fd.append('Birth date', state.date);
+      fd.append('Birth time', state.time || '(unknown)');
+      fd.append('Birth place', state.place);
+      fd.append('Sun', chart.sun);
+      fd.append('Moon', chart.moon);
+      fd.append('True North', chart.trueNorth);
+      fd.append('The fear that runs your life', state.fear);
+      fd.append('The pattern they keep repeating', state.pattern);
+      fd.append('A day in the life they are meant to live', state.day);
+      fd.append('_subject', 'New SOVRN Blueprint — ' + (firstName(state.name) || 'Anonymous') +
+                            ' (' + chart.sun + ' Sun / ' + chart.moon + ' Moon)');
+      try {
+        fetch(FORMSPREE, { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } })
+          .catch(function () {});
+      } catch (err) { /* never block the experience on the network */ }
+    }
+  })();
   </script>
 </body>
 </html>
