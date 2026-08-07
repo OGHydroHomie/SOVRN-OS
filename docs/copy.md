@@ -1,5 +1,11 @@
 # SOVRN — Approved Copy
 
+## Screen 0 — Opening Ceremony (once per session)
+
+Line A: "Every life follows a pattern."
+Line B: "Most remain invisible."
+Line C: "Yours is about to become visible."  ("visible" in ember red)
+
 ## Screen 1 — Landing
 
 Wordmark: "SOVRN" (gilt gold #E8B04B)
@@ -48,7 +54,26 @@ Status: "RESULTS · VERIFIED READING"
 Completion line: "This is your architecture. What you do with 
 it defines everything."
 
-CTA 1: "DOWNLOAD BLUEPRINT"
-CTA 2: "BEGIN YOUR TRANSFORMATION"
+CTA: "DOWNLOAD BLUEPRINT"
+
+## Screen 5 — Your Sovereign Practice (post-blueprint value)
+
+Header: "YOUR SOVEREIGN PRACTICE"
+Intro: "Based on your blueprint, here is your practice for the 
+next 7 days:"
+
+Card — MORNING: "Read your First Sovereign Act aloud every 
+morning before checking your phone. 60 seconds."
+Card — MIDDAY: "When you notice your shadow pattern activating, 
+pause. Name it: 'This is the pattern.' Then choose differently. 
+One moment of awareness per day."
+Card — EVENING: "Before bed, answer one question: Did I operate 
+from survival or sovereignty today? No judgment. Just notice."
+
+Closing: "This is day one. The daily OS — with personalized 
+missions, transit alerts, and shadow tracking — opens soon."
+
+Field label: "Get early access"
+Button: "I'M IN"  (Formspree signup_type: early_access)
 
 Footer: "SOVRN — 2026"

@@ -1,11 +1,16 @@
 # SOVRN — Design System (Obsidian Oracle)
 
 ## Visual Narrative
-The user journey moves from DARKNESS to LIGHT. Screens 1-3 
-(landing, quiz, loading) are dark — representing the unknown, 
-the descent into self. Screen 4 (blueprint results) transitions 
-to warm white — the emergence, the revelation, the truth made 
-visible. This transition IS the transformation made visual.
+The entire experience is dark — deep night sky (#0A0E1A) throughout,
+so every screen and every screenshot reads as dark + glowing (which
+dominates bright social feeds). A one-time OPENING CEREMONY (three
+fading lines) precedes the landing page and turns "opening a website"
+into "entering a portal." The revelation is the blueprint itself
+inscribing into being, not a background color change.
+
+(Historical note: an earlier version made the blueprint warm-white for a
+"dark→light emergence." That was reverted in favor of an all-dark app
+for social-screenshot performance.)
 
 ## Dark Screens (1-3: Landing, Quiz, Loading)
 
@@ -24,20 +29,29 @@ Text secondary: #A8A29B warm gray
 Text muted: #6E6A66
 Progress bar track: #2A272B, fill: #C21F2C
 
-## Light Screen (4: Blueprint Results)
+## Blueprint Results (Screen 4 — DARK, same system as 1-3)
 
-Background: #FBFAF7 warm white
-Cards: #FFFFFF
-  border: 1px solid #E8E6E1
-  border-radius: 12px
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04)
-  padding: 24px
-Card left borders: alternating #C21F2C (ember) and #1A1A1A (ink)
-Accent: #C21F2C ember red — quotes, highlights, CTA
-Text headline: #1A1A1A
-Text body: #4A4A4A, 16px, line-height 1.7
-Text muted: #9A9A9A, 13px
-Dividers: 1px solid #E8E6E1
+Background: #0A0E1A (transparent page over the shared night-sky backdrop)
+Cards: glass-morphism (same as landing/quiz)
+  background: rgba(255, 255, 255, 0.06)
+  backdrop-filter: blur(20px) saturate(1.2)
+  border: 1px solid rgba(255, 255, 255, 0.12)
+  border-radius: 16px
+Card left borders: alternating #C21F2C (ember) and #E8B04B (gilt)
+Section titles: Space Grotesk 700, #F4F1EA bone
+Section numbers: Space Grotesk 700, gilt at ~35% opacity
+Body text: 16px, #A8A29B, line-height 1.7
+Key quotes ("screenshot moments"): Fraunces italic, 18px, #C21F2C ember
+Streaming cursor: ember, blinks 800ms
+Masthead: gilt "SOVRN" + muted "BLUEPRINT NO. NNNN"; ember
+  "RESULTS · VERIFIED READING"
+Text is inscribed at a paced ~30ms cadence, not flooded.
+
+### Post-blueprint (value, not paywall)
+After completion: "Download Blueprint" (outline) → then YOUR SOVEREIGN
+PRACTICE — three glass cards (Morning / Midday / Evening) giving a 7-day
+practice, then an early-access email capture ("I'M IN" → Formspree
+signup_type: early_access). No waitlist-for-vaporware framing.
 
 ## Typography
 
@@ -83,6 +97,10 @@ Secondary (outline):
 
 ## Animation
 
+Opening ceremony (once per session, sessionStorage 'sovrn_ceremony_seen'):
+  three lines, each fade in 1s → hold 2s → fade out 0.5s (~10s total),
+  then a 500ms crossfade into the landing page. Line 3 emphasizes
+  "visible" in ember red. Tap to skip.
 Screen transitions: 300ms ease-out (opacity 0→1 + translateX)
 Loading messages: fade in/out over 3.5s cycle
 Streaming cursor: 2px wide, 20px tall, #C21F2C, blinks 800ms

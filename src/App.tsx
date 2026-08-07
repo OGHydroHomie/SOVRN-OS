@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import ApiKeyModal from './components/ApiKeyModal';
+import IntroCeremony from './components/IntroCeremony';
 import HeroPage from './pages/HeroPage';
 import QuizPage from './pages/QuizPage';
 import LoadingPage from './pages/LoadingPage';
@@ -10,6 +11,19 @@ import { generateBlueprint } from './utils/api';
 import { saveBlueprint, getBlueprint, getQuizData, trackEvent } from './utils/storage';
 
 const API_KEY_STORAGE = 'sovrn_api_key';
+const CEREMONY_SEEN = 'sovrn_ceremony_seen';
+
+/* Opening ceremony plays once per session, and never when a DEV ?screen
+   preview is requested. */
+function shouldPlayCeremony(): boolean {
+  try {
+    if (sessionStorage.getItem(CEREMONY_SEEN)) return false;
+    if (import.meta.env.DEV && new URLSearchParams(window.location.search).get('screen')) return false;
+  } catch {
+    return false;
+  }
+  return true;
+}
 
 /* DEV-only sample text for previewing the Blueprint screen (?screen=blueprint).
    Never referenced in production paths — only inside an import.meta.env.DEV guard. */
@@ -45,6 +59,12 @@ export default function App() {
   const [showApiKeyModal, setShowApiKeyModal] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pendingQuizData, setPendingQuizData] = useState<QuizData | null>(null);
+  const [showCeremony, setShowCeremony] = useState<boolean>(shouldPlayCeremony);
+
+  const endCeremony = useCallback(() => {
+    try { sessionStorage.setItem(CEREMONY_SEEN, '1'); } catch { /* private mode */ }
+    setShowCeremony(false);
+  }, []);
 
   useEffect(() => {
     trackEvent('pageView', 'hero');
@@ -134,6 +154,11 @@ export default function App() {
     <div className="min-h-screen" style={{ backgroundColor: '#0A0E1A', position: 'relative' }}>
       {/* Night-sky backdrop (fixed, behind everything) */}
       <div className="sv-backdrop" aria-hidden="true" />
+
+      {/* Opening ceremony — plays once per session, crossfades into the hero */}
+      <AnimatePresence>
+        {showCeremony && <IntroCeremony onComplete={endCeremony} />}
+      </AnimatePresence>
 
       {/* Error banner */}
       {error && (

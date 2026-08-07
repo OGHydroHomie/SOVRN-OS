@@ -4,8 +4,11 @@
 - [x] Screen 1: Landing (Obsidian Oracle dark theme)
 - [x] Screen 2: Quiz (8 questions + chart reveal, dark theme)
 - [x] Screen 3: Loading (rotating messages + ember wave, dark theme)
-- [x] Screen 4: Blueprint results (warm white "emergence into light",
-      streaming section cards, core-quote screenshot moment)
+- [x] Screen 0: Opening ceremony (3 fading lines, once per session)
+- [x] Screen 4: Blueprint results (DARK glass cards, paced "inscribed"
+      streaming, ember/gilt bars, key-quote screenshot moments)
+- [x] Screen 5: Post-blueprint "Your Sovereign Practice" (7-day practice
+      cards + early-access capture; replaced the waitlist/paywall)
 - [x] Chart engine (astronomy-engine — protected)
 - [x] Claude Sonnet streaming via Vercel serverless (protected)
 - [x] Formspree lead capture on Q8 submit
